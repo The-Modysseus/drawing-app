@@ -5,7 +5,10 @@ const Canvas = ({
     height
 }) => {
 
-    const setCanvasRef = useOnDraw(onDraw); // setCanvasRef is a function that will be called when the canvas is drawn
+    const {
+        onMouseDown,
+        setCanvasRef
+    } = useOnDraw(onDraw); // setCanvasRef is a function that will be called when the canvas is drawn
 
     function onDraw(ctx, point){ // ctx is the context of the canvas, point is the point in the canvas
         ctx.fillStyle = 'black'; // set the fill style to black
@@ -18,6 +21,7 @@ const Canvas = ({
         <canvas
             width={width}
             height={height}
+            onMouseDown={onMouseDown}
             style={canvasStyle}
             ref={setCanvasRef} // set the canvasRef to the canvas element
         />

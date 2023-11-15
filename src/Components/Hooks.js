@@ -8,6 +8,8 @@ export function useOnDraw(onDraw){ // returns a function that will be called whe
    const mouseMoveListenerRef = useRef(null); // mouseMoveListenerRef is a reference to the mouse move listener
    const mouseUpListenerRef = useRef(null); // mouseUpListenerRef is a reference to the mouse up listener
 
+   const prevPointRef = useRef(null); // prevPointRef is a reference to the previous point in the canvas where the mouse was pressed
+
    useEffect(() => { // useEffect is called when the component is mounted
 
     function initMouseMoveListener(){ // mouseMoveListener is a function that will be called when the mouse moves
@@ -17,8 +19,9 @@ export function useOnDraw(onDraw){ // returns a function that will be called whe
             const point = computePointInCanvas(e.clientX, e.clientY); // compute the point in the canvas
             const ctx = canvasRef.current.getContext('2d'); // get the context of the canvas
             if (onDraw) { // if the onDraw function is defined
-                onDraw(ctx, point); // call the onDraw function with the context and the point    
+                onDraw(ctx, point, prevPointRef.current); // call the onDraw function with the context and the point    
             }
+            prevPointRef.current = point; // save the point in the prevPointRef
             console.log(point); // log the point in the console
             }    
         }
@@ -30,6 +33,7 @@ export function useOnDraw(onDraw){ // returns a function that will be called whe
         if (!canvasRef.current) return; // if the canvas is not defined, return
         const mouseUpListener = () => { // e is the mouse event
             isDrawingRef.current = false; // set isDrawingRef to false
+            prevPointRef.current = null; // set prevPointRef to null
         }
         mouseUpListenerRef.current = mouseUpListener; // save the mouse up listener
         window.addEventListener('mouseup', mouseUpListener); // add the mouse up listener to the window

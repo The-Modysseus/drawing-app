@@ -2,13 +2,12 @@ import { useEffect, useRef } from "react";
 
 export function useOnDraw(onDraw){ // returns a function that will be called when the canvas is drawn
    const canvasRef = useRef(null); // canvasRef is a reference to the canvas element
-
+   const prevPointRef = useRef(null); // prevPointRef is a reference to the previous point in the canvas where the mouse was pressed
    const isDrawingRef = useRef(false); // isDrawingRef is a reference to a boolean that indicates whether the user is drawing
 
    const mouseMoveListenerRef = useRef(null); // mouseMoveListenerRef is a reference to the mouse move listener
    const mouseUpListenerRef = useRef(null); // mouseUpListenerRef is a reference to the mouse up listener
 
-   const prevPointRef = useRef(null); // prevPointRef is a reference to the previous point in the canvas where the mouse was pressed
 
    useEffect(() => { // useEffect is called when the component is mounted
 
@@ -18,6 +17,9 @@ export function useOnDraw(onDraw){ // returns a function that will be called whe
             {
             const point = computePointInCanvas(e.clientX, e.clientY); // compute the point in the canvas
             const ctx = canvasRef.current.getContext('2d'); // get the context of the canvas
+            if (prevPointRef.current === null) { // if the previous point is not defined
+                prevPointRef.current = point; // set the previous point to the current point  
+            }
             if (onDraw) { // if the onDraw function is defined
                 onDraw(ctx, point, prevPointRef.current); // call the onDraw function with the context and the point    
             }
